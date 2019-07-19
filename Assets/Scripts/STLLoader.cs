@@ -1,7 +1,4 @@
 ﻿using Parabox.Stl;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 namespace nn
 {
@@ -16,7 +13,7 @@ namespace nn
             var path = Application.persistentDataPath + "/" + Hololens_TEST_PATH;
 
             var stl = path + "/" + "start_part15.stl";
-
+            Debug.Log(stl);
 
             var meshes = Importer.Import(stl);
 

@@ -1,27 +1,33 @@
-﻿using UnityEngine;
-using System.Collections;
-using nn;
-using UnityEngine.XR.WSA;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.WSA;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class MainApp : MonoBehaviour
+public class ConnectIP : MonoBehaviour
 {
-    private void Awake()
-    {
-        //STLLoader.Load();
-    }
-    private string IP = "192.168.0.110";
+    public InputField inputField;
+
+    [SerializeField]
+    private string IP;
 
     private bool connected;
 
-    private void Start()
-    {
-        Connect();
-    }
+
+    //private void Start()
+    //{
+    //    Connect();
+    //}
     public void Connect()
     {
         if (HolographicRemoting.ConnectionState != HolographicStreamerConnectionState.Connected)
         {
+            if (inputField != null && !string.IsNullOrEmpty(inputField.text))
+            {
+                IP = inputField.text;
+            }
+
             HolographicRemoting.Connect(IP);
         }
     }
@@ -41,5 +47,7 @@ public class MainApp : MonoBehaviour
         XRSettings.LoadDeviceByName(newDevice);
         yield return null;
         XRSettings.enabled = true;
+
+        yield return SceneManager.LoadSceneAsync("MRScene");
     }
 }
