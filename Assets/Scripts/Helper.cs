@@ -15,5 +15,16 @@ namespace nn
 
             return matrix;
         }
+
+        public static Color ArrayToColor(List<float> array)
+        {
+            Color color = Color.white;
+            for (int i = 0; i < 3; i++)
+            {
+                color[i] = array[i];
+            }
+
+            return color;
+        }
     }
 }

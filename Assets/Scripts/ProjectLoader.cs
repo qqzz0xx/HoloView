@@ -34,6 +34,9 @@ namespace nn
 
                 string name = p.uuid;
 
+                Color color = Helper.ArrayToColor(p.color);
+                color.a = p.opacity;
+
                 Matrix4x4 matrix = Helper.ArrayToMatrix(p.matrix);
                 matrix = MainApp.Inst.transform.localToWorldMatrix * matrix * Matrix4x4.Scale(Vector3.one * 0.001f);
 
@@ -49,6 +52,11 @@ namespace nn
                     go.GetComponent<MeshFilter>().sharedMesh = meshes[0];
                     go.transform.parent = MainApp.Inst.transform;
                     go.transform.FromMatrix(matrix);
+                    var material = go.GetComponent<Renderer>().material;
+                    material.color = color;
+                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    material.SetInt("_ZWrite", 0);
                 }
                 else
                 {
@@ -69,6 +77,11 @@ namespace nn
                         go.transform.FromMatrix(matrix);
                         //GameObject.Instantiate(go);
                         // ctx.AddObjectToAsset(go.name, go);
+                        var material = go.GetComponent<Renderer>().material;
+                        material.color = color;
+                        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                        material.SetInt("_ZWrite", 0);
                     }
                 }
             });

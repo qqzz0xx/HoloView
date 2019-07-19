@@ -16,9 +16,19 @@ namespace nn
             Inst = this;
         }
 
+        public void LoadProject()
+        {
+            foreach(Transform obj in transform)
+            {
+                Destroy(obj.gameObject);
+            }
+
+            ProjectLoader.Load();
+        }
+
         private void Start()
         {
-            ProjectLoader.Load();
+            LoadProject();
         }
 
         void Update()
