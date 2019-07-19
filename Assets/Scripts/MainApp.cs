@@ -4,42 +4,34 @@ using nn;
 using UnityEngine.XR.WSA;
 using UnityEngine.XR;
 
-public class MainApp : MonoBehaviour
+namespace nn
 {
-    private void Awake()
+    public class MainApp : MonoBehaviour
     {
-        //STLLoader.Load();
-    }
-    private string IP = "192.168.0.110";
 
-    private bool connected;
+        public static MainApp Inst = null;
 
-    private void Start()
-    {
-        Connect();
-    }
-    public void Connect()
-    {
-        if (HolographicRemoting.ConnectionState != HolographicStreamerConnectionState.Connected)
+        private void Awake()
         {
-            HolographicRemoting.Connect(IP);
+            Inst = this;
         }
-    }
 
-    void Update()
-    {
-        if (!connected && HolographicRemoting.ConnectionState == HolographicStreamerConnectionState.Connected)
+        private void Start()
         {
-            connected = true;
-
-            StartCoroutine(LoadDevice("WindowsMR"));
+            ProjectLoader.Load();
         }
-    }
 
-    IEnumerator LoadDevice(string newDevice)
-    {
-        XRSettings.LoadDeviceByName(newDevice);
-        yield return null;
-        XRSettings.enabled = true;
+        void Update()
+        {
+        
+        }
+
+        private void OnDestroy()
+        {
+            if (HolographicRemoting.ConnectionState == HolographicStreamerConnectionState.Connected)
+            {
+                HolographicRemoting.Disconnect();
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@ using nn;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Tests
 {
@@ -26,7 +28,10 @@ namespace Tests
         {
 
 
-           
+
+
+
+            ProjectLoader.Load();
             // Use the Assert class to test conditions.
             // Use yield to skip a frame.
             yield return null;
