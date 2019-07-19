@@ -11,6 +11,9 @@ namespace nn
 
         public static MainApp Inst = null;
 
+        public Material material;
+
+
         private void Awake()
         {
             Inst = this;

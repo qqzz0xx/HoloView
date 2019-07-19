@@ -8,9 +8,8 @@ namespace nn
 {
     public class ProjectLoader : ScriptableObject
     {
-        public static readonly string Hololens_TEST_PATH = "Hololens_TEST";
+        public static readonly string Hololens_TEST_PATH = "Hololens";
         public static readonly string PROJECT_JSON_NAME = "project.json";
-
 
         public static void Load()
         {
@@ -47,12 +46,15 @@ namespace nn
                 {
                     var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Object.DestroyImmediate(go.GetComponent<BoxCollider>());
+                    go.transform.parent = MainApp.Inst.transform;
+
                     go.name = name;
                     meshes[0].name = "Mesh-" + name;
                     go.GetComponent<MeshFilter>().sharedMesh = meshes[0];
-                    go.transform.parent = MainApp.Inst.transform;
                     go.transform.FromMatrix(matrix);
-                    var material = go.GetComponent<Renderer>().material;
+                    var renderer = go.GetComponent<Renderer>();
+                    renderer.material = MainApp.Inst.material;
+                    var material = renderer.material;
                     material.color = color;
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -68,23 +70,29 @@ namespace nn
                         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         Object.DestroyImmediate(go.GetComponent<BoxCollider>());
                         go.transform.SetParent(parent.transform, false);
+                        parent.transform.parent = MainApp.Inst.transform;
+
                         go.name = name + "(" + i + ")";
 
                         var mesh = meshes[i];
                         mesh.name = "Mesh-" + name + "(" + i + ")";
                         go.GetComponent<MeshFilter>().sharedMesh = mesh;
-                        go.transform.parent = MainApp.Inst.transform;
                         go.transform.FromMatrix(matrix);
                         //GameObject.Instantiate(go);
                         // ctx.AddObjectToAsset(go.name, go);
-                        var material = go.GetComponent<Renderer>().material;
+                        var renderer = go.GetComponent<Renderer>();
+                        renderer.material = MainApp.Inst.material;
+                        var material = renderer.material;
+
                         material.color = color;
                         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                         material.SetInt("_ZWrite", 0);
                     }
                 }
+
             });
+
         }
     }
 }
