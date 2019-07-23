@@ -12,6 +12,7 @@ namespace nn
 
         public static MainApp Inst = null;
 
+        public GameObject MeshRoot;
         public UIController uiController;
         public Material material;
         public Material BoxMaterial;
@@ -25,14 +26,25 @@ namespace nn
 
         public void LoadProject()
         {
-            foreach(Transform obj in transform)
+            foreach (Transform obj in transform)
             {
                 Destroy(obj.gameObject);
             }
 
             ProjectLoader.Load();
 
-           StartCoroutine(InitEnableboundingBox());
+            var it = ToggleCollection.ToggleList[0];
+            var label = it.transform.Find("ButtonContent").Find("Label");
+            it.gameObject.name = "ALL";
+            label.GetComponent<TextMesh>().text = "ALL";
+
+
+            //var bdbox = MeshRoot.GetComponent<BoundingBox>();
+            //if (bdbox)
+            //{
+            //    bdbox.Active = true;
+            //}
+            StartCoroutine(InitEnableboundingBox());
         }
 
         public void InitRadialNum(int num)
@@ -67,11 +79,15 @@ namespace nn
         {
             Debug.Log(idx);
 
-            for (int i = 0; i < ToggleCollection.ToggleList.Length; i++)
+
+            EnableboundingBox(MeshRoot, ToggleCollection.CurrentIndex == 0);
+
+
+            for (int i = 1; i < ToggleCollection.ToggleList.Length; i++)
             {
                 var it = ToggleCollection.ToggleList[i];
                 var name = it.gameObject.name;
-                var pickedGameObject =  transform.Find(name).gameObject;
+                var pickedGameObject = MeshRoot.transform.Find(name).gameObject;
 
                 EnableboundingBox(pickedGameObject, ToggleCollection.CurrentIndex == i);
 
@@ -88,20 +104,33 @@ namespace nn
 
             yield return null;
 
-            foreach (Transform trans in transform)
+
+            EnableboundingBox(MeshRoot, false);
+
+            foreach (Transform trans in MeshRoot.transform)
             {
-                EnableboundingBox(trans.gameObject, false);
+                if (trans.gameObject.name != "rigRoot")
+                {
+                    EnableboundingBox(trans.gameObject, false);
+                }
             }
 
 
         }
         private void EnableboundingBox(GameObject obj, bool v)
         {
+       
             var bdbox = obj.GetComponent<BoundingBox>();
-            bdbox.Active = v;
+            if (bdbox)
+            {
+                bdbox.Active = v;
+            }
 
             var manipulationHandler = obj.GetComponent<ManipulationHandler>();
-            manipulationHandler.enabled = v;
+            if (manipulationHandler)
+            {
+                manipulationHandler.enabled = v;
+            }
 
             var boxcolliders = obj.GetComponents<BoxCollider>();
             foreach (var b in boxcolliders)
@@ -118,7 +147,7 @@ namespace nn
 
         void Update()
         {
-        
+
         }
 
         private void OnDestroy()

@@ -43,12 +43,19 @@ public class UIController : MonoBehaviour
 
     public void OnResetCliked()
     {
-        var trans = MainApp.Inst.transform;
-        foreach (Transform child in trans)
+        var root = MainApp.Inst.MeshRoot;
+        root.transform.localPosition = Vector3.zero;
+        root.transform.localRotation = Quaternion.identity;
+        root.transform.localScale = Vector3.one;
+
+        foreach (Transform child in root.transform)
         {
-            child.transform.localPosition = Vector3.zero;
-            child.transform.localRotation = Quaternion.identity;
-            child.transform.localScale = Vector3.one;
+            if (child.gameObject.name != "rigRoot")
+            {
+                child.transform.localPosition = Vector3.zero;
+                child.transform.localRotation = Quaternion.identity;
+                child.transform.localScale = Vector3.one;
+            }
         }
     }
     public void OnUpdateAphla(SliderEventData eventData)

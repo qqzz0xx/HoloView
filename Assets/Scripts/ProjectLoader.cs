@@ -9,9 +9,19 @@ using System.Linq;
 using UnityEngine;
 namespace nn
 {
+
     public class ProjectLoader : ScriptableObject
     {
-        public static readonly string Hololens_TEST_PATH = "Hololens";
+        class MeshCS
+        {
+            public string name;
+            public string uuid;
+            public GameObject mesh;
+            public Bounds bounds;
+
+        } 
+
+        public static readonly string Hololens_TEST_PATH = "Hololens2";
         public static readonly string PROJECT_JSON_NAME = "project.json";
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
@@ -32,25 +42,27 @@ namespace nn
             }
             return dst as T;
         }
-        static void AddBoundingBox(int idx, GameObject go)
+        static BoundingBox AddBoundingBox(int idx, GameObject go)
         {
             var boundingbox = go.AddComponent<BoundingBox>();
             boundingbox.BoxGrabbedMaterial = MainApp.Inst.BoxGrabMaterial;
             boundingbox.BoxMaterial = MainApp.Inst.BoxMaterial;
             boundingbox.BoundingBoxActivation = BoundingBox.BoundingBoxActivationType.ActivateManually;
-            boundingbox.ScaleHandleSize = 0.03f;
-            boundingbox.RotationHandleDiameter = 0.03f;
-            boundingbox.WireframeEdgeRadius = 0.003f;
+            boundingbox.ScaleHandleSize = 0.015f;
+            boundingbox.RotationHandleDiameter = 0.015f;
+            boundingbox.WireframeEdgeRadius = 0.0015f;
             boundingbox.HideElementsInInspector = false;
 
             go.AddComponent<ManipulationHandler>();
 
             MainApp.Inst.AddRadial(idx, go);
 
+            return boundingbox;
+
         }
         public static void Load()
         {
-            GameObject root = MainApp.Inst.gameObject;
+            GameObject root = MainApp.Inst.MeshRoot;
             Material sharedmaterial = MainApp.Inst.material;
 
             var path = Application.persistentDataPath + "/" + Hololens_TEST_PATH;
@@ -78,9 +90,9 @@ namespace nn
 
             var mainBounds = new Bounds();
 
-            MainApp.Inst.InitRadialNum(ProjectjsonObj.nodes.Count);
+            MainApp.Inst.InitRadialNum(ProjectjsonObj.nodes.Count + 1);
 
-            int nodesIdx = 0;
+            int nodesIdx = 1;
 
             ProjectjsonObj.nodes.ForEach(p =>
             {
@@ -90,14 +102,24 @@ namespace nn
                 Debug.Log(stl);
 
                 var meshes = Importer.Import(stl);
-
-                string name = meshNameMap[p.uuid];
+                string name;
+                if (p.name == "MeshActor")
+                {
+                    name = meshNameMap[p.uuid];
+                }
+                else
+                {
+                    name = p.name;
+                }
 
                 Color color = Helper.ArrayToColor(p.color);
                 color.a = p.opacity;
 
                 Matrix4x4 matrix = Helper.ArrayToMatrix(p.matrix);
-                matrix = root.transform.localToWorldMatrix * matrix;
+                Matrix4x4 rightCroodToLeft = Matrix4x4.identity;
+                rightCroodToLeft.m00 = -1;
+
+                //matrix = rightCroodToLeft * matrix;
 
                 if (meshes.Length < 1)
                     return;
@@ -108,11 +130,12 @@ namespace nn
                     Object.DestroyImmediate(go.GetComponent<BoxCollider>());
                     go.transform.parent = root.transform;
                     go.transform.localScale = Vector3.one;
+                    go.transform.FromMatrix(matrix);
 
                     go.name = name;
                     meshes[0].name = "Mesh-" + name;
                     go.GetComponent<MeshFilter>().sharedMesh = meshes[0];
-                    go.transform.FromMatrix(matrix);
+              
                     var renderer = go.GetComponent<Renderer>();
                     renderer.material = sharedmaterial;
                     var material = renderer.material;
@@ -122,10 +145,11 @@ namespace nn
                     material.SetInt("_ZWrite", 0);
 
                     var box = go.AddComponent<BoxCollider>();
-                    box.size = meshes[0].bounds.size;
+                    box.size = meshes[0].bounds.size + Vector3.one * 100;
                     box.center = meshes[0].bounds.center;
 
-                    AddBoundingBox(nodesIdx, go);
+                    var boundingBox = AddBoundingBox(nodesIdx, go);
+                    boundingBox.BoundsOverride = box;
 
                     mainBounds.Encapsulate(box.bounds);
 
@@ -134,9 +158,9 @@ namespace nn
                 {
                     var parent = new GameObject();
                     parent.name = name;
-                    parent.transform.parent = MainApp.Inst.transform;
+                    parent.transform.parent = root.transform;
                     parent.transform.localScale = Vector3.one;
-                    parent.transform.localPosition = Vector3.zero;
+                    parent.transform.FromMatrix(matrix);
 
                     var bds = new Bounds();
 
@@ -145,14 +169,14 @@ namespace nn
                         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         Object.DestroyImmediate(go.GetComponent<BoxCollider>());
                         go.transform.SetParent(parent.transform, false);
-                       
+                        go.transform.localPosition = Vector3.zero;
 
                         go.name = name + "(" + i + ")";
 
                         var mesh = meshes[i];
                         mesh.name = "Mesh-" + name + "(" + i + ")";
                         go.GetComponent<MeshFilter>().sharedMesh = mesh;
-                        go.transform.FromMatrix(matrix);
+                    
                         //GameObject.Instantiate(go);
                         // ctx.AddObjectToAsset(go.name, go);
                         var renderer = go.GetComponent<Renderer>();
@@ -169,10 +193,11 @@ namespace nn
 
 
                     var box = parent.AddComponent<BoxCollider>();
-                    box.size = bds.size;
+                    box.size = bds.size  + Vector3.one * 100;
                     box.center = bds.center;
 
-                    AddBoundingBox(nodesIdx, parent);
+                    var boundingBox = AddBoundingBox(nodesIdx, parent);
+                    boundingBox.BoundsOverride = box;
 
                     mainBounds.Encapsulate(bds);
 
@@ -181,10 +206,12 @@ namespace nn
 
                 nodesIdx++;
             });
-            //var mainbox = MainApp.Inst.gameObject.AddComponent<BoxCollider>();
-            //mainbox.size = mainBounds.size;
-            //mainbox.center = mainBounds.center;
-            //AddBoundingBox(MainApp.Inst.gameObject);
+            var mainbox = root.gameObject.AddComponent<BoxCollider>();
+            mainbox.size = mainBounds.size + Vector3.one * 100;
+            mainbox.center = mainBounds.center;
+            var mainBounding = AddBoundingBox(0, root);
+
+            mainBounding.BoundsOverride = mainbox;
 
         }
     }

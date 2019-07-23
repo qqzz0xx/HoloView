@@ -8,9 +8,12 @@ namespace nn
         public static Matrix4x4 ArrayToMatrix(List<float> array)
         {
             Matrix4x4 matrix = Matrix4x4.zero;
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 4; i++)
             {
-                matrix[i] = array[i];
+                for (int j = 0; j < 4; j++)
+                {
+                    matrix[i, j] = array[i * 4 + j];
+                }
             }
 
             return matrix;
