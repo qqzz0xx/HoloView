@@ -310,6 +310,8 @@ MonoBehaviour:
   roundedEdges: 1
   roundedCaps: 1
   lineRenderer: {fileID: 7648513102559648688}
+  tileMaterialByWorldLength: 0
+  tileMaterialScale: 1
 --- !u!120 &7648513102559648688
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -826,6 +828,8 @@ MonoBehaviour:
   roundedEdges: 1
   roundedCaps: 1
   lineRenderer: {fileID: 2857520951414895393}
+  tileMaterialByWorldLength: 0
+  tileMaterialScale: 1
 --- !u!1 &8943795953604800610
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,7 +979,6 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_textAlignment: 544
-  m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -1002,6 +1005,7 @@ MonoBehaviour:
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
+  m_VertexBufferAutoSizeReduction: 1
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
@@ -1016,12 +1020,9 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
-  m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1280960932929266388}
   m_subTextObjects:

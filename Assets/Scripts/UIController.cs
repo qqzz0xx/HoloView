@@ -1,4 +1,5 @@
 ﻿using Microsoft.MixedReality.Toolkit.UI;
+using nn;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +38,17 @@ public class UIController : MonoBehaviour
             var v = renderer.material.color.a;
 
             pinchSlider.SliderValue = v;
+        }
+    }
+
+    public void OnResetCliked()
+    {
+        var trans = MainApp.Inst.transform;
+        foreach (Transform child in trans)
+        {
+            child.transform.localPosition = Vector3.zero;
+            child.transform.localRotation = Quaternion.identity;
+            child.transform.localScale = Vector3.one;
         }
     }
     public void OnUpdateAphla(SliderEventData eventData)

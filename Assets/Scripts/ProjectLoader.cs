@@ -48,7 +48,7 @@ namespace nn
             MainApp.Inst.AddRadial(idx, go);
 
         }
-        public static void Load()
+        public static void Load(GameObject root, Material sharedmaterial)
         {
 
             var path = Application.persistentDataPath + "/" + Hololens_TEST_PATH;
@@ -95,7 +95,7 @@ namespace nn
                 color.a = p.opacity;
 
                 Matrix4x4 matrix = Helper.ArrayToMatrix(p.matrix);
-                matrix = MainApp.Inst.transform.localToWorldMatrix * matrix;
+                matrix = root.transform.localToWorldMatrix * matrix;
 
                 if (meshes.Length < 1)
                     return;
@@ -104,7 +104,7 @@ namespace nn
                 {
                     var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Object.DestroyImmediate(go.GetComponent<BoxCollider>());
-                    go.transform.parent = MainApp.Inst.transform;
+                    go.transform.parent = root.transform;
                     go.transform.localScale = Vector3.one;
 
                     go.name = name;
@@ -112,7 +112,7 @@ namespace nn
                     go.GetComponent<MeshFilter>().sharedMesh = meshes[0];
                     go.transform.FromMatrix(matrix);
                     var renderer = go.GetComponent<Renderer>();
-                    renderer.material = MainApp.Inst.material;
+                    renderer.material = sharedmaterial;
                     var material = renderer.material;
                     material.color = color;
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
@@ -134,6 +134,7 @@ namespace nn
                     parent.name = name;
                     parent.transform.parent = MainApp.Inst.transform;
                     parent.transform.localScale = Vector3.one;
+                    parent.transform.localPosition = Vector3.zero;
 
                     var bds = new Bounds();
 
@@ -153,7 +154,7 @@ namespace nn
                         //GameObject.Instantiate(go);
                         // ctx.AddObjectToAsset(go.name, go);
                         var renderer = go.GetComponent<Renderer>();
-                        renderer.material = MainApp.Inst.material;
+                        renderer.material = sharedmaterial;
                         var material = renderer.material;
 
                         material.color = color;

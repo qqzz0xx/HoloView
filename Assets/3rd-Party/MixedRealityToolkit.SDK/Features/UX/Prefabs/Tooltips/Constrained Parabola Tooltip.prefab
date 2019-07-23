@@ -160,6 +160,7 @@ MonoBehaviour:
   contentScale: 2
   fontSize: 30
   attachPointType: 1
+  attachPointOffset: {x: 0, y: 0, z: 0}
   toolTipLine: {fileID: 114158392181191990}
 --- !u!114 &114355726734100340
 MonoBehaviour:
@@ -236,6 +237,7 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   velocitySearchRange: 0.02
   distorters: []
+  distortionEnabled: 1
   distortionMode: 0
   distortionStrength:
     serializedVersion: 2
@@ -371,6 +373,8 @@ MonoBehaviour:
   roundedEdges: 1
   roundedCaps: 1
   lineRenderer: {fileID: 120116089410604596}
+  tileMaterialByWorldLength: 0
+  tileMaterialScale: 1
 --- !u!120 &120116089410604596
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -597,6 +601,7 @@ MonoBehaviour:
   - {x: 0, y: 1, z: 0}
   velocitySearchRange: 0.02
   distorters: []
+  distortionEnabled: 1
   distortionMode: 0
   distortionStrength:
     serializedVersion: 2
@@ -859,6 +864,8 @@ MonoBehaviour:
   roundedEdges: 1
   roundedCaps: 1
   lineRenderer: {fileID: 5250982768442807330}
+  tileMaterialByWorldLength: 0
+  tileMaterialScale: 1
 --- !u!1 &1942671045987180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008,7 +1015,6 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_textAlignment: 544
-  m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -1035,6 +1041,7 @@ MonoBehaviour:
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
+  m_VertexBufferAutoSizeReduction: 1
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
@@ -1049,12 +1056,9 @@ MonoBehaviour:
     lineCount: 1
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
-  m_inputSource: 3
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 0}
   m_subTextObjects:
