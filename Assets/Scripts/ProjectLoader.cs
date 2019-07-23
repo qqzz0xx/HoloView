@@ -48,8 +48,10 @@ namespace nn
             MainApp.Inst.AddRadial(idx, go);
 
         }
-        public static void Load(GameObject root, Material sharedmaterial)
+        public static void Load()
         {
+            GameObject root = MainApp.Inst.gameObject;
+            Material sharedmaterial = MainApp.Inst.material;
 
             var path = Application.persistentDataPath + "/" + Hololens_TEST_PATH;
 
