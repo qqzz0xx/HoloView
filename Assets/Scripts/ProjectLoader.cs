@@ -21,7 +21,7 @@ namespace nn
 
         } 
 
-        public static readonly string Hololens_TEST_PATH = "Hololens2";
+        public static readonly string Hololens_TEST_PATH = "hololens";
         public static readonly string PROJECT_JSON_NAME = "project.json";
         public static T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
@@ -101,7 +101,7 @@ namespace nn
 
                 Debug.Log(stl);
 
-                var meshes = Importer.Import(stl);
+                var meshes = Importer.Import(stl, CoordinateSpace.Left, UpAxis.Y, true, UnityEngine.Rendering.IndexFormat.UInt32);
                 string name;
                 if (p.name == "MeshActor")
                 {
@@ -116,10 +116,6 @@ namespace nn
                 color.a = p.opacity;
 
                 Matrix4x4 matrix = Helper.ArrayToMatrix(p.matrix);
-                Matrix4x4 rightCroodToLeft = Matrix4x4.identity;
-                rightCroodToLeft.m00 = -1;
-
-                //matrix = rightCroodToLeft * matrix;
 
                 if (meshes.Length < 1)
                     return;
@@ -131,18 +127,23 @@ namespace nn
                     go.transform.parent = root.transform;
                     go.transform.localScale = Vector3.one;
                     go.transform.FromMatrix(matrix);
+                    go.layer = LayerMask.NameToLayer("Transparent");
 
                     go.name = name;
                     meshes[0].name = "Mesh-" + name;
+          
                     go.GetComponent<MeshFilter>().sharedMesh = meshes[0];
-              
+
+                
+
                     var renderer = go.GetComponent<Renderer>();
                     renderer.material = sharedmaterial;
                     var material = renderer.material;
                     material.color = color;
-                    material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                    material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    material.SetInt("_ZWrite", 0);
+                    //material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                    //material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                    //material.SetInt("_ZWrite", 0);
+                    //material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent + nodesIdx;
 
                     var box = go.AddComponent<BoxCollider>();
                     box.size = meshes[0].bounds.size + Vector3.one * 100;
@@ -187,6 +188,7 @@ namespace nn
                         material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                         material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
                         material.SetInt("_ZWrite", 0);
+   
                         bds.Encapsulate(new Bounds(mesh.bounds.center, mesh.bounds.size));
 
                     }

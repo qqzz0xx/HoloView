@@ -99,6 +99,17 @@ public class UIController : MonoBehaviour
             pickedGameObject.SetActive(!pickedGameObject.activeSelf);
         }
     }
+    public void OnShowHideBoxCliked()
+    {
+        if (pickedGameObject != null)
+        {
+            var bdbox = pickedGameObject.GetComponent<BoundingBox>();
+            if (bdbox)
+            {
+                MainApp.Inst.EnableboundingBox(pickedGameObject, !bdbox.Active);
+            }
 
+        }
+    }
 
 }

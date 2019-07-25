@@ -105,7 +105,7 @@ namespace nn
             yield return null;
 
 
-            EnableboundingBox(MeshRoot, false);
+            //EnableboundingBox(MeshRoot, false);
 
             foreach (Transform trans in MeshRoot.transform)
             {
@@ -117,7 +117,7 @@ namespace nn
 
 
         }
-        private void EnableboundingBox(GameObject obj, bool v)
+        public void EnableboundingBox(GameObject obj, bool v)
         {
        
             var bdbox = obj.GetComponent<BoundingBox>();
