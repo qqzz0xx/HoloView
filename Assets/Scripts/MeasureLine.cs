@@ -28,7 +28,7 @@ public class MeasureLine : MonoBehaviour
         Vector3 y = m_p2 - m_p1;
         var scale = y.magnitude / 2;
 
-        text.text = y.magnitude.ToString();
+        text.text = y.magnitude.ToString("F2") + "mm";
 
         y.Normalize();
 
