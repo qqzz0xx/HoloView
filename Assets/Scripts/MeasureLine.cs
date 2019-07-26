@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class MeasureLine : MonoBehaviour
 {
+    public TextMeshPro text;
+
     public Vector3 m_p1;
     public Vector3 m_p2;
 
@@ -24,6 +27,8 @@ public class MeasureLine : MonoBehaviour
     {
         Vector3 y = m_p2 - m_p1;
         var scale = y.magnitude / 2;
+
+        text.text = y.magnitude.ToString();
 
         y.Normalize();
 
