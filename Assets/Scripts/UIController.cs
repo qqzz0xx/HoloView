@@ -110,6 +110,14 @@ public class UIController : MonoBehaviour
             }
 
         }
+        else
+        {
+            var bdbox = MainApp.Inst.MeshRoot.GetComponent<BoundingBox>();
+            if (bdbox)
+            {
+                MainApp.Inst.EnableboundingBox(MainApp.Inst.MeshRoot, !bdbox.Active);
+            }
+        }
     }
 
 }

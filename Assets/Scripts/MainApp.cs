@@ -143,6 +143,7 @@ namespace nn
         private void Start()
         {
             LoadProject();
+            ProjectLoader.LoadMeasure();
         }
 
         void Update()

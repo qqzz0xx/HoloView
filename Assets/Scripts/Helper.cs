@@ -29,5 +29,16 @@ namespace nn
 
             return color;
         }
+
+        public static Vector3 ArrayToVector3(List<float> array)
+        {
+            Vector3 v = Vector3.zero;
+            for (int i = 0; i < 3; i++)
+            {
+                v[i] = array[i];
+            }
+
+            return v;
+        }
     }
 }

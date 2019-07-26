@@ -18,4 +18,21 @@ namespace nn
         public string name;
         public List<NodeJS> nodes;
     }
+
+    public struct MeasureBaseJS
+    {
+        public int mpr_type;
+        public string name;
+        public List<float> p1;
+        public List<float> p2;
+        public string uuid;
+    }
+
+    public struct MeasureJS
+    {
+        public MeasureBaseJS @base;
+        public List<float> color;
+        public string id;
+        public string txt;
+    }
 }
