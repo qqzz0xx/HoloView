@@ -64,7 +64,7 @@ namespace nn
 
         public static void LoadMeasure()
         {
-            var root = MainApp.Inst.MeshRoot.transform.parent;
+            var root = MainApp.Inst.MeshRoot.transform;
 
             var path = Application.persistentDataPath + "/" + Hololens_TEST_PATH;
 
