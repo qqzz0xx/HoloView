@@ -22,6 +22,9 @@ public class Network : MonoBehaviour
 
     private Transports transports;
 
+    private float heartbeatTime = 5; //second
+    private float totalDeltaTime = 0;
+
     public static IPAddress GetLocalIPAddress()
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -95,6 +98,14 @@ public class Network : MonoBehaviour
             {
                 transports.ProBytes(recvArgs.Buffer, 0, recvArgs.Buffer.Length);
             }
+        }
+
+        totalDeltaTime += Time.deltaTime;
+        if (totalDeltaTime > heartbeatTime)
+        {
+            totalDeltaTime -= heartbeatTime;
+
+            SendHeartBeat();
         }
     }
 
